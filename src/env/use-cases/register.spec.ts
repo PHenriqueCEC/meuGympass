@@ -4,17 +4,26 @@ import { PrismaUsersRepository } from '../repositories/prisma/prisma-users-repos
 import { RegisterUseCase } from './register'
 import { InMemoryUsersRepository } from '../repositories/in-memory/in-memory-users-repository'
 import { UserAlreadyExistsError } from './errors/user-already-exists-error'
+import { beforeEach } from 'node:test'
 
 /*test('check if it works', () => {
     expect(2 + 2).toBe(5)
 })*/
 
-describe('Register Use Case', () => {
-    it.skip('should be able to register', async () => {
-        const usersRepository = new InMemoryUsersRepository()
-        const registerUseCase = new RegisterUseCase(usersRepository)
+let usersRepository: InMemoryUsersRepository
+let sut: RegisterUseCase
 
-        const { user } = await registerUseCase.execute({
+describe('Register Use Case', () => {
+    
+    //executa uma função ou bloco de código antes de cada teste individual em uma suíte de testes
+    beforeEach(() => {
+        usersRepository = new InMemoryUsersRepository()
+        sut = new RegisterUseCase(usersRepository)
+    })
+    
+    
+    it.skip('should be able to register', async () => {
+        const { user } = await sut.execute({
             name: 'John Doe',
             email: "johndoe@example.com",
             password: "123456"
@@ -24,11 +33,9 @@ describe('Register Use Case', () => {
     })
     
     it('should hash user password upon registration', async () => {
-        const usersRepository = new InMemoryUsersRepository()
         //Repositório fake aqui dentro da estrutura de teste para que o deploy seja mais rápido, não precise fazer conexão com o BD
-        const registerUseCase = new RegisterUseCase(usersRepository)
 
-        const { user } = await registerUseCase.execute({
+        const { user } = await sut.execute({
             name: 'John Doe',
             email: "johndoe@example.com",
             password: "123456"
@@ -43,19 +50,16 @@ describe('Register Use Case', () => {
     })
 
 it('should not be able to register with same email twice', async () => {
-        const usersRepository = new InMemoryUsersRepository()
-        const registerUseCase = new RegisterUseCase(usersRepository)
-
         const email = "johndoe@example.com"
 
-        await registerUseCase.execute({
+        await sut.execute({
             name: 'John Doe',
             email,
             password: "123456"
         })
 
         await expect(() => 
-        registerUseCase.execute({
+        sut.execute({
             name: 'John Doe',
             email,
             password: "123456"
