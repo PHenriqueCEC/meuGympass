@@ -1,9 +1,9 @@
-import { expect, test, describe, it } from 'vitest'
+import { expect, test, describe, it, beforeEach } from 'vitest'
 import { hash } from 'bcryptjs'
 import { InMemoryUsersRepository } from '../repositories/in-memory/in-memory-users-repository'
 import { AuthenticateUseCase } from './authenticate'
 import { InvalidCredentialsError } from './errors/invalid-credentials-error'
-import { beforeEach } from 'node:test'
+//import { beforeEach } from 'node:test'
 
 
 let usersRepository: InMemoryUsersRepository
@@ -18,7 +18,7 @@ describe('Authenticate Use Case', () => {
     it('should be able to authenticate', async () => {
 
         await usersRepository.create({
-            name: "john Doe",
+            name: "John Doe",
             email: "johndoe@example.com",
             password_hash: await hash("123456", 6)
         })
@@ -33,8 +33,8 @@ describe('Authenticate Use Case', () => {
 
     describe('Authenticate Use Case', () => {
         it('should not be able to authenticate with wrong email', async () => {
-
-            expect(() => sut.execute({
+            //Se não colocar o await nas Promisses pode ser que os testes passem sem de fato terem sido executados. Ou seja, teremos falsos positivos
+           await expect(() => sut.execute({
                 email: "johndoe@example.com",
                 password: "123456"
             })).rejects.toBeInstanceOf(InvalidCredentialsError)
@@ -42,7 +42,7 @@ describe('Authenticate Use Case', () => {
 
         it('should not be able to authenticate with wrong password', async () => {
 
-            expect(() => sut.execute({
+            await expect(() => sut.execute({
                 email: "johndoe@example.com",
                 password: "123123"
             })).rejects.toBeInstanceOf(InvalidCredentialsError)

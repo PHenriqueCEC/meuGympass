@@ -1,10 +1,10 @@
-import { expect, test, describe, it } from 'vitest'
+import { expect, test, describe, it, beforeEach } from 'vitest'
 import { compare } from 'bcryptjs'
 import { PrismaUsersRepository } from '../repositories/prisma/prisma-users-repository'
 import { RegisterUseCase } from './register'
 import { InMemoryUsersRepository } from '../repositories/in-memory/in-memory-users-repository'
 import { UserAlreadyExistsError } from './errors/user-already-exists-error'
-import { beforeEach } from 'node:test'
+//import { beforeEach } from 'node:test'
 
 /*test('check if it works', () => {
     expect(2 + 2).toBe(5)
